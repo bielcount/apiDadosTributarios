@@ -14,14 +14,22 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Testar se a variável MONGO_URI está sendo lida
+console.log("Tentando conectar ao MongoDB com URI:", process.env.MONGO_URI);
+
+if (!process.env.MONGO_URI) {
+    console.error("ERRO: MONGO_URI não definida!");
+    process.exit(1);
+}
+
 // Conexão com o MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
-    console.log('Conectado ao MongoDB Atlas');
+    console.log('✅ Conectado ao MongoDB Atlas');
 }).catch((err) => {
-    console.error('Erro ao conectar ao MongoDB:', err);
+    console.error('❌ Erro ao conectar ao MongoDB:', err);
 });
 
 // Rotas
@@ -36,5 +44,5 @@ app.get('/', (req, res) => {
 
 // Iniciar o servidor
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
