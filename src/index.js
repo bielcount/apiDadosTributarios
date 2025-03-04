@@ -1,3 +1,4 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,6 +7,7 @@ const cors = require('cors');
 const cfopRoutes = require('./routes/cfopRoute');
 const csosnRoutes = require('./routes/csosnRoute');
 const cstRoutes = require('./routes/cstRoute');
+const ncmRoutes = require('./routes/ncmRoute'); // Importa a rota do NCM
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,6 +38,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api/cfop', cfopRoutes);
 app.use('/api/csosn', csosnRoutes);
 app.use('/api/cst', cstRoutes);
+app.use('/api/ncm', ncmRoutes); // Registra a rota do NCM
 
 // Rota principal
 app.get('/', (req, res) => {

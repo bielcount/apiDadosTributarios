@@ -1,12 +1,40 @@
 const express = require('express');
-const router = express.Router();
+const mongoose = require('mongoose');
+const cors = require('cors');
+const cfopRoutes = require('./routes/cfopRoute');
+const csosnRoutes = require('./routes/csosnRoute');
+const cstRoutes = require('./routes/cstRoute');
+const ncmRoutes = require('./routes/ncmRoute');  // Certifique-se de que isso está presente
 
-const cfopRoutes = require('./cfopRoute');
-const csosnRoutes = require('./csosnRoute');
-const cstRoutes = require('./cstRoute');
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-router.use('/cfop', cfopRoutes);
-router.use('/csosn', csosnRoutes);
-router.use('/cst', cstRoutes);
+// Middlewares
+app.use(cors());
+app.use(express.json());
 
-module.exports = router;
+// Conexão com o MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('✅ Conectado ao MongoDB Atlas');
+}).catch((err) => {
+    console.error('❌ Erro ao conectar ao MongoDB:', err);
+});
+
+// Rotas
+app.use('/api/cfop', cfopRoutes);
+app.use('/api/csosn', csosnRoutes);
+app.use('/api/cst', cstRoutes);
+app.use('/api/ncm', ncmRoutes);  // Certifique-se de que a rota /api/ncm está registrada aqui
+
+// Rota principal
+app.get('/', (req, res) => {
+    res.send('API de Códigos Fiscais Rodando!');
+});
+
+// Iniciar o servidor
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+});
